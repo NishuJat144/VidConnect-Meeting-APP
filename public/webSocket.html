@@ -1,0 +1,2146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Conferencing App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #ec4899;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --border: #1e293b;
+            --border-light: #334155;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --backdrop: rgba(15, 23, 42, 0.8);
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* ===== SCREENS ===== */
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        #loginScreen {
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+        }
+
+        .login-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .login-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .decoration-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .decoration-circle.c1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -100px;
+            right: -100px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .decoration-circle.c2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            bottom: -50px;
+            left: -50px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        .decoration-circle.c3 {
+            width: 200px;
+            height: 200px;
+            background: var(--primary-light);
+            top: 50%;
+            right: 10%;
+            animation: float 7s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .login-content {
+            position: relative;
+            z-index: 20;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-section i {
+            font-size: 50px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .logo-section h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            animation: slideDown 0.6s ease-out 0.1s backwards;
+        }
+
+        .logo-section p {
+            color: var(--text-dim);
+            animation: slideDown 0.6s ease-out 0.2s backwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-form {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px 14px 45px;
+            background: rgba(71, 85, 105, 0.2);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            pointer-events: none;
+        }
+
+        .form-divider {
+            text-align: center;
+            margin: 30px 0 20px;
+            position: relative;
+        }
+
+        .form-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+            z-index: 0;
+        }
+
+        .form-divider span {
+            position: relative;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            padding: 0 12px;
+            color: var(--text-dim);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 1;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+        }
+
+        .join-section {
+            margin-top: 20px;
+        }
+
+        /* ===== MEETING SCREEN ===== */
+        #meetingScreen {
+            flex-direction: column;
+            background: var(--dark);
+        }
+
+        .meeting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: rgba(15, 23, 42, 0.6);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-left {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .meeting-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meeting-title {
+            color: var(--text-dim);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .meeting-code-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        #meetingCodeDisplay {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 100px;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 4px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.1);
+            color: var(--primary-light);
+        }
+
+        .copy-btn.copied {
+            color: var(--success);
+        }
+
+        .participant-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .participant-badge i {
+            color: var(--success);
+        }
+
+        .participant-badge span {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 18px;
+        }
+
+        .icon-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .unread-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 12px;
+            height: 12px;
+            background: var(--danger);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .leave-btn {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .leave-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* ===== MEETING CONTAINER ===== */
+        .meeting-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .video-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 12px;
+            padding: 12px;
+            overflow: auto;
+            align-content: start;
+        }
+
+        .video-card {
+            position: relative;
+            background: var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            border: 1px solid var(--border-light);
+        }
+
+        .video-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: var(--darker);
+        }
+
+        .video-card.local {
+            border: 2px solid var(--primary);
+        }
+
+        .video-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            background: linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0.9) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-label span {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .media-indicators {
+            display: flex;
+            gap: 6px;
+        }
+
+        .media-indicators i {
+            color: var(--danger);
+            font-size: 12px;
+            background: rgba(239, 68, 68, 0.2);
+            padding: 4px 6px;
+            border-radius: 4px;
+        }
+
+        /* ===== CHAT SIDEBAR ===== */
+        .chat-sidebar {
+            width: 0;
+            background: rgba(15, 23, 42, 0.9);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-sidebar.active {
+            width: 320px;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chat-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--text);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chat-message {
+            background: rgba(71, 85, 105, 0.2);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border-left: 2px solid var(--primary);
+        }
+
+        .chat-message.own {
+            background: rgba(99, 102, 241, 0.2);
+            border-left-color: var(--primary);
+            margin-left: 20px;
+        }
+
+        .chat-message-author {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+
+        .chat-message-content {
+            font-size: 14px;
+            color: var(--text);
+            word-break: break-word;
+        }
+
+        .chat-message-time {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        #chatInput {
+            flex: 1;
+            padding: 10px 12px;
+            background: rgba(71, 85, 105, 0.2);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        #chatInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        /* ===== CONTROL BAR ===== */
+        .control-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: rgba(15, 23, 42, 0.8);
+            border-top: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .control-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(71, 85, 105, 0.3);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-light);
+        }
+
+        .control-btn:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .control-btn.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .control-btn.inactive {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .end-call-btn {
+            width: auto;
+            height: 48px;
+            padding: 0 24px;
+            background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+            border: none;
+            color: white;
+            border-radius: 24px;
+            font-weight: 600;
+            gap: 8px;
+        }
+
+        .end-call-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+        }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--backdrop);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 0;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        /* ===== PREVIEW MODAL ===== */
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .preview-video-section {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: var(--darker);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+
+        .preview-video-section video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-status {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preview-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .setting-select {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(71, 85, 105, 0.2);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .setting-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .setting-select option {
+            background: var(--dark);
+            color: var(--text);
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .preview-toggle-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-light);
+            background: rgba(71, 85, 105, 0.2);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .preview-toggle-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+        }
+
+        .preview-toggle-btn.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .preview-toggle-btn.inactive {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 16px 24px;
+            background: var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            transition: all 0.3s ease;
+            z-index: 2000;
+            max-width: 400px;
+            border: 1px solid var(--border-light);
+        }
+
+        .notification.show {
+            bottom: 24px;
+            animation: slideUp 0.3s ease;
+        }
+
+        .notification.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .notification.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .notification.info {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-sidebar.active {
+                width: 100%;
+                position: absolute;
+                height: 100%;
+                top: 0;
+                right: 0;
+                z-index: 100;
+            }
+
+            .control-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+            }
+
+            .login-content {
+                padding: 24px;
+            }
+
+            .login-form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-content">
+                <div class="logo-section">
+                    <i class="fas fa-video"></i>
+                    <h1>Meeting App</h1>
+                    <p>Seamless Video Meetings</p>
+                </div>
+
+                <div class="login-form">
+                    <div class="form-group">
+                        <input 
+                            type="text" 
+                            id="userNameInput" 
+                            placeholder="Enter your name" 
+                            maxlength="30"
+                        >
+                        <i class="fas fa-user"></i>
+                    </div>
+
+                    <div class="form-divider">
+                        <span>Choose an option</span>
+                    </div>
+
+                    <button id="newMeetingBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Start New Meeting
+                    </button>
+
+                    <div class="join-section">
+                        <div class="form-group">
+                            <input 
+                                type="text" 
+                                id="meetingIdInput" 
+                                placeholder="Enter meeting code"
+                                maxlength="20"
+                            >
+                            <i class="fas fa-door-open"></i>
+                        </div>
+                        <button id="joinMeetingBtn" class="btn btn-secondary">
+                            <i class="fas fa-sign-in-alt"></i> Join Meeting
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="login-decoration">
+                <div class="decoration-circle c1"></div>
+                <div class="decoration-circle c2"></div>
+                <div class="decoration-circle c3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Screen -->
+    <div id="previewScreen" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Check Your Audio & Video</h2>
+                <button class="modal-close" id="closePreviewBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-container">
+                    <div class="preview-video-section">
+                        <video id="previewVideo" autoplay muted playsinline></video>
+                        <div class="preview-status" id="previewStatus">
+                            Camera ON
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Camera</label>
+                        <select id="previewCameraSelect" class="setting-select"></select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Microphone</label>
+                        <select id="previewMicrophoneSelect" class="setting-select"></select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label>Speaker</label>
+                        <select id="previewSpeakerSelect" class="setting-select"></select>
+                    </div>
+
+                    <div class="preview-controls">
+                        <button id="previewToggleAudioBtn" class="preview-toggle-btn active">
+                            <i class="fas fa-microphone"></i> <span>Audio</span>
+                        </button>
+                        <button id="previewToggleVideoBtn" class="preview-toggle-btn active">
+                            <i class="fas fa-video"></i> <span>Video</span>
+                        </button>
+                    </div>
+
+                    <button id="continueToMeetingBtn" class="btn btn-primary">
+                        <i class="fas fa-arrow-right"></i> Continue to Meeting
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meeting Screen -->
+    <div id="meetingScreen" class="screen">
+        <!-- Header -->
+        <div class="meeting-header">
+            <div class="header-left">
+                <div class="meeting-info">
+                    <span class="meeting-title">Meeting Code:</span>
+                    <div class="meeting-code-display">
+                        <span id="meetingCodeDisplay">---</span>
+                        <button id="copyCodeBtn" class="copy-btn" title="Copy code">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="participant-badge">
+                    <i class="fas fa-users"></i>
+                    <span id="participantCount">1</span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <button id="toggleChatBtn" class="icon-btn" title="Chat">
+                    <i class="fas fa-comments"></i>
+                    <span id="unreadBadge" class="unread-badge" style="display: none;">●</span>
+                </button>
+                <button id="settingsBtn" class="icon-btn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button id="leaveBtn" class="icon-btn leave-btn" title="Leave meeting">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Video Grid -->
+        <div class="meeting-container">
+            <div class="video-grid" id="videoGrid">
+                <!-- Local video -->
+                <div class="video-card local">
+                    <video id="localVideo" autoplay muted playsinline></video>
+                    <div class="video-label">
+                        <span id="localUserName">You</span>
+                        <div class="media-indicators">
+                            <i class="fas fa-microphone-slash" id="localAudioIcon" style="display: none;"></i>
+                            <i class="fas fa-video-slash" id="localVideoIcon" style="display: none;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Remote videos container -->
+                <div id="remoteVideosContainer"></div>
+            </div>
+
+            <!-- Chat Sidebar -->
+            <div id="chatSidebar" class="chat-sidebar">
+                <div class="chat-header">
+                    <h3>Chat</h3>
+                    <button id="closeChatBtn" class="close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="chatMessages" class="chat-messages"></div>
+                <div class="chat-input-group">
+                    <input 
+                        type="text" 
+                        id="chatInput" 
+                        placeholder="Type a message..."
+                        maxlength="500"
+                    >
+                    <button id="sendChatBtn" class="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Bar -->
+        <div class="control-bar">
+            <div class="controls">
+                <button id="toggleAudioBtn" class="control-btn active" title="Toggle audio">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <button id="toggleVideoBtn" class="control-btn active" title="Toggle video">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button id="screenshareBtn" class="control-btn" title="Share screen">
+                    <i class="fas fa-share-square"></i>
+                </button>
+                <button id="settingsMeetingBtn" class="control-btn" title="Device Settings">
+                    <i class="fas fa-sliders-h"></i>
+                </button>
+            </div>
+
+            <button id="endCallBtn" class="control-btn end-call-btn">
+                <i class="fas fa-phone-slash"></i> End Call
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Device Settings</h2>
+                <button class="modal-close" id="closeSettingsBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label>Camera</label>
+                    <select id="cameraSelect" class="setting-select"></select>
+                </div>
+                <div class="setting-group">
+                    <label>Microphone</label>
+                    <select id="microphoneSelect" class="setting-select"></select>
+                </div>
+                <div class="setting-group">
+                    <label>Speaker</label>
+                    <select id="speakerSelect" class="setting-select"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // ===== STATE MANAGEMENT =====
+        let ws = null;
+        let userId = null;
+        let meetingId = null;
+        let userName = null;
+
+        // WebRTC
+        const peerConnections = new Map();
+        const dataChannels = new Map();
+        let localStream = null;
+        let screenStream = null;
+        let isAudioEnabled = true;
+        let isVideoEnabled = true;
+        let isScreenSharing = false;
+
+        const RTCConfig = {
+            iceServers: [
+                { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] }
+            ]
+        };
+
+        // Device selection
+        let selectedCameraId = null;
+        let selectedMicrophoneId = null;
+        let selectedSpeakerId = null;
+
+        // ===== DOM ELEMENTS =====
+        const loginScreen = document.getElementById('loginScreen');
+        const previewScreen = document.getElementById('previewScreen');
+        const meetingScreen = document.getElementById('meetingScreen');
+
+        const userNameInput = document.getElementById('userNameInput');
+        const meetingIdInput = document.getElementById('meetingIdInput');
+        const newMeetingBtn = document.getElementById('newMeetingBtn');
+        const joinMeetingBtn = document.getElementById('joinMeetingBtn');
+
+        const previewVideo = document.getElementById('previewVideo');
+        const previewStatus = document.getElementById('previewStatus');
+        const previewCameraSelect = document.getElementById('previewCameraSelect');
+        const previewMicrophoneSelect = document.getElementById('previewMicrophoneSelect');
+        const previewSpeakerSelect = document.getElementById('previewSpeakerSelect');
+        const previewToggleAudioBtn = document.getElementById('previewToggleAudioBtn');
+        const previewToggleVideoBtn = document.getElementById('previewToggleVideoBtn');
+        const closePreviewBtn = document.getElementById('closePreviewBtn');
+        const continueToMeetingBtn = document.getElementById('continueToMeetingBtn');
+
+        const localVideo = document.getElementById('localVideo');
+        const videoGrid = document.getElementById('videoGrid');
+        const remoteVideosContainer = document.getElementById('remoteVideosContainer');
+
+        const meetingCodeDisplay = document.getElementById('meetingCodeDisplay');
+        const copyCodeBtn = document.getElementById('copyCodeBtn');
+        const participantCount = document.getElementById('participantCount');
+
+        const toggleAudioBtn = document.getElementById('toggleAudioBtn');
+        const toggleVideoBtn = document.getElementById('toggleVideoBtn');
+        const screenshareBtn = document.getElementById('screenshareBtn');
+        const endCallBtn = document.getElementById('endCallBtn');
+        const leaveBtn = document.getElementById('leaveBtn');
+        const settingsMeetingBtn = document.getElementById('settingsMeetingBtn');
+
+        const chatInput = document.getElementById('chatInput');
+        const sendChatBtn = document.getElementById('sendChatBtn');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatSidebar = document.getElementById('chatSidebar');
+        const toggleChatBtn = document.getElementById('toggleChatBtn');
+        const closeChatBtn = document.getElementById('closeChatBtn');
+        const unreadBadge = document.getElementById('unreadBadge');
+
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+        const cameraSelect = document.getElementById('cameraSelect');
+        const microphoneSelect = document.getElementById('microphoneSelect');
+        const speakerSelect = document.getElementById('speakerSelect');
+
+        const localUserName = document.getElementById('localUserName');
+        const notification = document.getElementById('notification');
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            newMeetingBtn.addEventListener('click', startNewMeeting);
+            joinMeetingBtn.addEventListener('click', joinMeeting);
+
+            closePreviewBtn.addEventListener('click', closePreview);
+            continueToMeetingBtn.addEventListener('click', continueToMeeting);
+
+            previewToggleAudioBtn.addEventListener('click', togglePreviewAudio);
+            previewToggleVideoBtn.addEventListener('click', togglePreviewVideo);
+
+            previewCameraSelect.addEventListener('change', changePreviewCamera);
+            previewMicrophoneSelect.addEventListener('change', changePreviewMicrophone);
+            previewSpeakerSelect.addEventListener('change', changePreviewSpeaker);
+
+            toggleAudioBtn.addEventListener('click', toggleAudio);
+            toggleVideoBtn.addEventListener('click', toggleVideo);
+            screenshareBtn.addEventListener('click', toggleScreenShare);
+            endCallBtn.addEventListener('click', () => leaveCall(true));
+            leaveBtn.addEventListener('click', () => leaveCall(true));
+            settingsMeetingBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+
+            copyCodeBtn.addEventListener('click', copyMeetingCode);
+            toggleChatBtn.addEventListener('click', () => toggleChat(true));
+            closeChatBtn.addEventListener('click', () => toggleChat(false));
+            sendChatBtn.addEventListener('click', sendChatMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendChatMessage();
+            });
+
+            settingsBtn.addEventListener('click', () => settingsModal.classList.add('active'));
+            closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('active'));
+
+            cameraSelect.addEventListener('change', changeMeetingCamera);
+            microphoneSelect.addEventListener('change', changeMeetingMicrophone);
+            speakerSelect.addEventListener('change', changeMeetingSpeaker);
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function generateMeetingId() {
+            return Math.random().toString(36).substring(2, 9).toUpperCase();
+        }
+
+        function showNotification(message, type = 'info') {
+            notification.textContent = message;
+            notification.className = `notification show ${type}`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== MEDIA DEVICE MANAGEMENT =====
+        async function loadMediaDevices() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                
+                // Clear existing options
+                previewCameraSelect.innerHTML = '';
+                previewMicrophoneSelect.innerHTML = '';
+                previewSpeakerSelect.innerHTML = '';
+                cameraSelect.innerHTML = '';
+                microphoneSelect.innerHTML = '';
+                speakerSelect.innerHTML = '';
+
+                devices.forEach(device => {
+                    if (device.kind === 'videoinput') {
+                        const option = document.createElement('option');
+                        option.value = device.deviceId;
+                        option.text = device.label || 'Camera ' + (cameraSelect.length + 1);
+                        
+                        previewCameraSelect.appendChild(option.cloneNode(true));
+                        cameraSelect.appendChild(option);
+
+                        if (!selectedCameraId) selectedCameraId = device.deviceId;
+                    } else if (device.kind === 'audioinput') {
+                        const option = document.createElement('option');
+                        option.value = device.deviceId;
+                        option.text = device.label || 'Microphone ' + (microphoneSelect.length + 1);
+                        
+                        previewMicrophoneSelect.appendChild(option.cloneNode(true));
+                        microphoneSelect.appendChild(option);
+
+                        if (!selectedMicrophoneId) selectedMicrophoneId = device.deviceId;
+                    } else if (device.kind === 'audiooutput') {
+                        const option = document.createElement('option');
+                        option.value = device.deviceId;
+                        option.text = device.label || 'Speaker ' + (speakerSelect.length + 1);
+                        
+                        previewSpeakerSelect.appendChild(option.cloneNode(true));
+                        speakerSelect.appendChild(option);
+
+                        if (!selectedSpeakerId) selectedSpeakerId = device.deviceId;
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading media devices:', error);
+                showNotification('Unable to load media devices', 'error');
+            }
+        }
+
+        // ===== PREVIEW SCREEN =====
+        async function startNewMeeting() {
+            const name = userNameInput.value.trim();
+            if (!name) {
+                showNotification('Please enter your name', 'error');
+                return;
+            }
+
+            userName = name;
+            meetingId = generateMeetingId();
+            await showPreview();
+        }
+
+        async function joinMeeting() {
+            const name = userNameInput.value.trim();
+            const code = meetingIdInput.value.trim();
+
+            if (!name) {
+                showNotification('Please enter your name', 'error');
+                return;
+            }
+            if (!code) {
+                showNotification('Please enter meeting code', 'error');
+                return;
+            }
+
+            userName = name;
+            meetingId = code;
+            await showPreview();
+        }
+
+        async function showPreview() {
+            try {
+                await loadMediaDevices();
+
+                const constraints = {
+                    audio: {
+                        deviceId: selectedMicrophoneId ? { exact: selectedMicrophoneId } : undefined,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    },
+                    video: {
+                        deviceId: selectedCameraId ? { exact: selectedCameraId } : undefined,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
+
+                localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                previewVideo.srcObject = localStream;
+
+                loginScreen.classList.remove('active');
+                previewScreen.classList.add('active');
+
+                isAudioEnabled = true;
+                isVideoEnabled = true;
+                updatePreviewStatus();
+            } catch (error) {
+                console.error('Error accessing media:', error);
+                showNotification('Unable to access camera/microphone', 'error');
+            }
+        }
+
+        function closePreview() {
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+                localStream = null;
+            }
+            previewScreen.classList.remove('active');
+            loginScreen.classList.add('active');
+        }
+
+        function togglePreviewAudio() {
+            isAudioEnabled = !isAudioEnabled;
+            if (localStream) {
+                localStream.getAudioTracks().forEach(track => {
+                    track.enabled = isAudioEnabled;
+                });
+            }
+            updatePreviewStatus();
+        }
+
+        function togglePreviewVideo() {
+            isVideoEnabled = !isVideoEnabled;
+            if (localStream) {
+                localStream.getVideoTracks().forEach(track => {
+                    track.enabled = isVideoEnabled;
+                });
+            }
+            updatePreviewStatus();
+        }
+
+        function updatePreviewStatus() {
+            const audioStatus = isAudioEnabled ? '✓ Audio' : '✗ Audio';
+            const videoStatus = isVideoEnabled ? '✓ Video' : '✗ Video';
+            previewStatus.innerHTML = `${audioStatus} • ${videoStatus}`;
+
+            previewToggleAudioBtn.classList.toggle('active', isAudioEnabled);
+            previewToggleAudioBtn.classList.toggle('inactive', !isAudioEnabled);
+
+            previewToggleVideoBtn.classList.toggle('active', isVideoEnabled);
+            previewToggleVideoBtn.classList.toggle('inactive', !isVideoEnabled);
+        }
+
+        async function changePreviewCamera() {
+            const deviceId = previewCameraSelect.value;
+            selectedCameraId = deviceId;
+            cameraSelect.value = deviceId;
+            await updatePreviewStream();
+        }
+
+        async function changePreviewMicrophone() {
+            const deviceId = previewMicrophoneSelect.value;
+            selectedMicrophoneId = deviceId;
+            microphoneSelect.value = deviceId;
+            await updatePreviewStream();
+        }
+
+        async function changePreviewSpeaker() {
+            const deviceId = previewSpeakerSelect.value;
+            selectedSpeakerId = deviceId;
+            speakerSelect.value = deviceId;
+            
+            if (previewVideo.setSinkId) {
+                try {
+                    await previewVideo.setSinkId(deviceId);
+                } catch (error) {
+                    console.error('Error setting sink ID:', error);
+                }
+            }
+        }
+
+        async function updatePreviewStream() {
+            try {
+                if (localStream) {
+                    localStream.getTracks().forEach(track => track.stop());
+                }
+
+                const constraints = {
+                    audio: {
+                        deviceId: selectedMicrophoneId ? { exact: selectedMicrophoneId } : undefined,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    },
+                    video: {
+                        deviceId: selectedCameraId ? { exact: selectedCameraId } : undefined,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
+
+                localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                previewVideo.srcObject = localStream;
+            } catch (error) {
+                console.error('Error updating stream:', error);
+                showNotification('Error updating device', 'error');
+            }
+        }
+
+        async function continueToMeeting() {
+            previewScreen.classList.remove('active');
+            meetingScreen.classList.add('active');
+            localVideo.srcObject = localStream;
+            localUserName.textContent = userName;
+            meetingCodeDisplay.textContent = meetingId;
+
+            connectWebSocket();
+            showNotification(`Meeting ${meetingId} started!`, 'success');
+        }
+
+        // ===== WEBSOCKET MANAGEMENT =====
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}`;
+            
+            ws = new WebSocket(wsUrl);
+
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                userId = Math.random().toString(36).substring(7);
+                
+                ws.send(JSON.stringify({
+                    type: 'join-meeting',
+                    meetingId: meetingId,
+                    userName: userName
+                }));
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    handleWebSocketMessage(data);
+                } catch (error) {
+                    console.error('Error parsing message:', error);
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                showNotification('Connection error', 'error');
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+            };
+        }
+
+        async function handleWebSocketMessage(data) {
+            try {
+                switch (data.type) {
+                    case 'existing-users':
+                        for (const user of data.users) {
+                            await createPeerConnection(user.userId, user.userName, true);
+                        }
+                        break;
+
+                    case 'user-joined':
+                        showNotification(`${data.userName} joined the call`, 'info');
+                        await createPeerConnection(data.userId, data.userName, true);
+                        break;
+
+                    case 'user-left':
+                        showNotification(`${data.userName} left the call`, 'info');
+                        closePeerConnection(data.userId);
+                        removeRemoteVideo(data.userId);
+                        participantCount.textContent = data.totalParticipants;
+                        break;
+
+                    case 'offer':
+                        await handleOffer(data);
+                        break;
+
+                    case 'answer':
+                        await handleAnswer(data);
+                        break;
+
+                    case 'ice-candidate':
+                        await handleIceCandidate(data);
+                        break;
+
+                    case 'participant-count':
+                        participantCount.textContent = data.count;
+                        break;
+
+                    case 'chat-message':
+                        displayChatMessage(data);
+                        break;
+
+                    case 'media-status':
+                        updateRemoteMediaStatus(data);
+                        break;
+                }
+            } catch (error) {
+                console.error('Error handling WebSocket message:', error);
+            }
+        }
+
+        // ===== WEBRTC PEER CONNECTIONS =====
+        async function createPeerConnection(remoteUserId, remoteName, initiator) {
+            if (peerConnections.has(remoteUserId)) {
+                return peerConnections.get(remoteUserId);
+            }
+
+            const peerConnection = new RTCPeerConnection(RTCConfig);
+            peerConnections.set(remoteUserId, peerConnection);
+
+            // Add local tracks
+            localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, localStream);
+            });
+
+            // Handle remote tracks
+            peerConnection.ontrack = (event) => {
+                console.log('Received remote track:', event.track.kind);
+                addRemoteVideo(remoteUserId, remoteName, event.streams[0]);
+            };
+
+            // Handle ICE candidates
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate && ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'ice-candidate',
+                        targetUserId: remoteUserId,
+                        candidate: event.candidate
+                    }));
+                }
+            };
+
+            // Handle connection state changes
+            peerConnection.onconnectionstatechange = () => {
+                console.log(`Connection state with ${remoteUserId}:`, peerConnection.connectionState);
+                if (peerConnection.connectionState === 'failed' || peerConnection.connectionState === 'disconnected') {
+                    setTimeout(() => {
+                        if (peerConnection.connectionState === 'disconnected') {
+                            closePeerConnection(remoteUserId);
+                            removeRemoteVideo(remoteUserId);
+                        }
+                    }, 3000);
+                }
+            };
+
+            // Create offer if initiator
+            if (initiator) {
+                try {
+                    const offer = await peerConnection.createOffer();
+                    await peerConnection.setLocalDescription(offer);
+                    
+                    if (ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({
+                            type: 'offer',
+                            targetUserId: remoteUserId,
+                            offer: offer
+                        }));
+                    }
+                } catch (error) {
+                    console.error('Error creating offer:', error);
+                }
+            }
+
+            return peerConnection;
+        }
+
+        async function handleOffer(data) {
+            let peerConnection = peerConnections.get(data.from);
+            
+            if (!peerConnection) {
+                peerConnection = await createPeerConnection(data.from, 'User', false);
+            }
+
+            try {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+                const answer = await peerConnection.createAnswer();
+                await peerConnection.setLocalDescription(answer);
+
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'answer',
+                        targetUserId: data.from,
+                        answer: answer
+                    }));
+                }
+            } catch (error) {
+                console.error('Error handling offer:', error);
+            }
+        }
+
+        async function handleAnswer(data) {
+            const peerConnection = peerConnections.get(data.from);
+            if (peerConnection) {
+                try {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+                } catch (error) {
+                    console.error('Error handling answer:', error);
+                }
+            }
+        }
+
+        async function handleIceCandidate(data) {
+            const peerConnection = peerConnections.get(data.from);
+            if (peerConnection) {
+                try {
+                    await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+                } catch (error) {
+                    console.error('Error adding ICE candidate:', error);
+                }
+            }
+        }
+
+        function closePeerConnection(userId) {
+            const peerConnection = peerConnections.get(userId);
+            if (peerConnection) {
+                peerConnection.close();
+                peerConnections.delete(userId);
+            }
+        }
+
+        // ===== VIDEO MANAGEMENT =====
+        function addRemoteVideo(userId, userName, stream) {
+            if (document.getElementById(`video-${userId}`)) {
+                return;
+            }
+
+            const videoCard = document.createElement('div');
+            videoCard.className = 'video-card';
+            videoCard.id = `card-${userId}`;
+
+            const video = document.createElement('video');
+            video.id = `video-${userId}`;
+            video.autoplay = true;
+            video.playsinline = true;
+            video.srcObject = stream;
+
+            const label = document.createElement('div');
+            label.className = 'video-label';
+            label.innerHTML = `
+                <span>${userName}</span>
+                <div class="media-indicators">
+                    <i class="fas fa-microphone-slash" style="display: none;" data-user="${userId}" data-type="audio"></i>
+                    <i class="fas fa-video-slash" style="display: none;" data-user="${userId}" data-type="video"></i>
+                </div>
+            `;
+
+            videoCard.appendChild(video);
+            videoCard.appendChild(label);
+            remoteVideosContainer.appendChild(videoCard);
+        }
+
+        function removeRemoteVideo(userId) {
+            const card = document.getElementById(`card-${userId}`);
+            if (card) {
+                card.remove();
+            }
+        }
+
+        // ===== AUDIO/VIDEO CONTROLS =====
+        function toggleAudio() {
+            isAudioEnabled = !isAudioEnabled;
+
+            if (localStream) {
+                localStream.getAudioTracks().forEach(track => {
+                    track.enabled = isAudioEnabled;
+                });
+            }
+
+            toggleAudioBtn.classList.toggle('active', isAudioEnabled);
+            toggleAudioBtn.classList.toggle('inactive', !isAudioEnabled);
+
+            const icon = toggleAudioBtn.querySelector('i');
+            icon.className = isAudioEnabled ? 'fas fa-microphone' : 'fas fa-microphone-slash';
+
+            const localAudioIcon = document.getElementById('localAudioIcon');
+            localAudioIcon.style.display = isAudioEnabled ? 'none' : 'inline';
+
+            broadcastMediaStatus();
+        }
+
+        function toggleVideo() {
+            isVideoEnabled = !isVideoEnabled;
+
+            if (localStream && !isScreenSharing) {
+                localStream.getVideoTracks().forEach(track => {
+                    track.enabled = isVideoEnabled;
+                });
+            }
+
+            toggleVideoBtn.classList.toggle('active', isVideoEnabled);
+            toggleVideoBtn.classList.toggle('inactive', !isVideoEnabled);
+
+            const icon = toggleVideoBtn.querySelector('i');
+            icon.className = isVideoEnabled ? 'fas fa-video' : 'fas fa-video-slash';
+
+            const localVideoIcon = document.getElementById('localVideoIcon');
+            localVideoIcon.style.display = isVideoEnabled ? 'none' : 'inline';
+
+            broadcastMediaStatus();
+        }
+
+        function broadcastMediaStatus() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    type: 'media-status',
+                    audio: isAudioEnabled,
+                    video: isVideoEnabled
+                }));
+            }
+        }
+
+        function updateRemoteMediaStatus(data) {
+            const audioIcon = document.querySelector(`i[data-user="${data.userId}"][data-type="audio"]`);
+            const videoIcon = document.querySelector(`i[data-user="${data.userId}"][data-type="video"]`);
+
+            if (audioIcon) {
+                audioIcon.style.display = data.audio ? 'none' : 'inline';
+            }
+            if (videoIcon) {
+                videoIcon.style.display = data.video ? 'none' : 'inline';
+            }
+        }
+
+        // ===== SCREEN SHARE =====
+        async function toggleScreenShare() {
+            try {
+                if (isScreenSharing) {
+                    // Stop screen sharing and return to camera
+                    if (screenStream) {
+                        screenStream.getTracks().forEach(track => track.stop());
+                    }
+
+                    const constraints = {
+                        video: {
+                            deviceId: selectedCameraId ? { exact: selectedCameraId } : undefined,
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        }
+                    };
+
+                    const cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
+                    const videoTrack = cameraStream.getVideoTracks()[0];
+
+                    peerConnections.forEach((pc) => {
+                        const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                        if (sender) {
+                            sender.replaceTrack(videoTrack).catch(err => console.error('Error replacing track:', err));
+                        }
+                    });
+
+                    localStream = cameraStream;
+                    localVideo.srcObject = cameraStream;
+                    screenStream = null;
+                    isScreenSharing = false;
+                    screenshareBtn.classList.remove('active');
+                    showNotification('Screen share stopped', 'info');
+                } else {
+                    // Start screen sharing
+                    screenStream = await navigator.mediaDevices.getDisplayMedia({
+                        video: { cursor: 'always' }
+                    });
+
+                    const screenTrack = screenStream.getVideoTracks()[0];
+
+                    peerConnections.forEach((pc) => {
+                        const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                        if (sender) {
+                            sender.replaceTrack(screenTrack).catch(err => console.error('Error replacing track:', err));
+                        }
+                    });
+
+                    localVideo.srcObject = screenStream;
+                    isScreenSharing = true;
+                    screenshareBtn.classList.add('active');
+
+                    screenTrack.onended = async () => {
+                        toggleScreenShare();
+                    };
+
+                    showNotification('Screen sharing started', 'success');
+                }
+            } catch (error) {
+                console.error('Screen share error:', error);
+                showNotification('Screen share unavailable', 'error');
+            }
+        }
+
+        // ===== DEVICE SWITCHING DURING MEETING =====
+        async function changeMeetingCamera() {
+            try {
+                selectedCameraId = cameraSelect.value;
+                
+                const constraints = {
+                    video: {
+                        deviceId: { exact: selectedCameraId },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
+
+                const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                const newVideoTrack = newStream.getVideoTracks()[0];
+
+                peerConnections.forEach((pc) => {
+                    const sender = pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                    if (sender) {
+                        sender.replaceTrack(newVideoTrack).catch(err => console.error('Error replacing track:', err));
+                    }
+                });
+
+                localStream.getVideoTracks().forEach(track => track.stop());
+                localStream = newStream;
+                localVideo.srcObject = newStream;
+            } catch (error) {
+                console.error('Error changing camera:', error);
+                showNotification('Error changing camera', 'error');
+            }
+        }
+
+        async function changeMeetingMicrophone() {
+            try {
+                selectedMicrophoneId = microphoneSelect.value;
+                
+                const constraints = {
+                    audio: {
+                        deviceId: { exact: selectedMicrophoneId },
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                };
+
+                const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                const newAudioTrack = newStream.getAudioTracks()[0];
+
+                peerConnections.forEach((pc) => {
+                    const sender = pc.getSenders().find(s => s.track && s.track.kind === 'audio');
+                    if (sender) {
+                        sender.replaceTrack(newAudioTrack).catch(err => console.error('Error replacing track:', err));
+                    }
+                });
+
+                localStream.getAudioTracks().forEach(track => track.stop());
+                localStream.addTrack(newAudioTrack);
+            } catch (error) {
+                console.error('Error changing microphone:', error);
+                showNotification('Error changing microphone', 'error');
+            }
+        }
+
+        async function changeMeetingSpeaker() {
+            const deviceId = speakerSelect.value;
+            selectedSpeakerId = deviceId;
+
+            const remoteVideos = document.querySelectorAll('#remoteVideosContainer video');
+            remoteVideos.forEach(video => {
+                if (video.setSinkId) {
+                    video.setSinkId(deviceId).catch(err => console.error('Error setting sink ID:', err));
+                }
+            });
+        }
+
+        // ===== CHAT =====
+        function toggleChat(show) {
+            chatSidebar.classList.toggle('active', show);
+            if (show) {
+                unreadBadge.style.display = 'none';
+                chatInput.focus();
+            }
+        }
+
+        function sendChatMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    type: 'chat-message',
+                    message: message
+                }));
+            }
+
+            chatInput.value = '';
+            chatInput.focus();
+        }
+
+        function displayChatMessage(data) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${data.userId === userId ? 'own' : ''}`;
+
+            const author = document.createElement('div');
+            author.className = 'chat-message-author';
+            author.textContent = data.from;
+
+            const content = document.createElement('div');
+            content.className = 'chat-message-content';
+            content.textContent = data.message;
+
+            const time = document.createElement('div');
+            time.className = 'chat-message-time';
+            time.textContent = data.timestamp;
+
+            messageDiv.appendChild(author);
+            messageDiv.appendChild(content);
+            messageDiv.appendChild(time);
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            if (!chatSidebar.classList.contains('active') && data.userId !== userId) {
+                unreadBadge.style.display = 'block';
+            }
+        }
+
+        // ===== COPY MEETING CODE =====
+        function copyMeetingCode() {
+            navigator.clipboard.writeText(meetingId).then(() => {
+                copyCodeBtn.classList.add('copied');
+                showNotification('Meeting code copied!', 'success');
+
+                setTimeout(() => {
+                    copyCodeBtn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // ===== LEAVE CALL =====
+        function leaveCall(notify = true) {
+            // Close all peer connections
+            peerConnections.forEach((pc) => {
+                pc.close();
+            });
+            peerConnections.clear();
+
+            // Stop all tracks
+            if (localStream) {
+                localStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+
+            if (screenStream) {
+                screenStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+
+            if (localVideo.srcObject) {
+                localVideo.srcObject.getTracks().forEach(track => track.stop());
+                localVideo.srcObject = null;
+            }
+
+            localStream = null;
+            screenStream = null;
+            isScreenSharing = false;
+
+            // Notify server
+            if (ws && ws.readyState === WebSocket.OPEN && notify) {
+                ws.send(JSON.stringify({
+                    type: 'user-left'
+                }));
+                ws.close();
+            }
+
+            // Reset UI
+            remoteVideosContainer.innerHTML = '';
+            meetingScreen.classList.remove('active');
+            loginScreen.classList.add('active');
+            userNameInput.value = '';
+            meetingIdInput.value = '';
+            chatMessages.innerHTML = '';
+            chatSidebar.classList.remove('active');
+
+            isAudioEnabled = true;
+            isVideoEnabled = true;
+            toggleAudioBtn.classList.add('active');
+            toggleVideoBtn.classList.add('active');
+
+            showNotification('You left the meeting', 'info');
+        }
+
+        // ===== PAGE UNLOAD HANDLERS =====
+        window.addEventListener('beforeunload', () => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'user-left' }));
+                ws.close();
+            }
+            
+            if (localStream) {
+                localStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+
+            if (screenStream) {
+                screenStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && localStream) {
+                localStream.getVideoTracks().forEach(track => {
+                    track.enabled = false;
+                });
+            } else if (localStream) {
+                localStream.getVideoTracks().forEach(track => {
+                    track.enabled = isVideoEnabled;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

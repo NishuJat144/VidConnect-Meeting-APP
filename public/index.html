@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidConnect - Video Meeting</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- NAVBAR   -->
+
+    <nav class="navbar">
+    <div class="nav-container">
+
+        <!-- Logo -->
+        <div class="nav-logo">
+            <i class="fas fa-video"></i>
+            <span>VidConnect</span>
+        </div>
+
+        <!-- Navigation Links -->
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Meetings</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+
+        <!-- Right Side Buttons -->
+        <div class="nav-actions">
+            <button class="nav-btn login-btn" 
+            onclick="window.location.href = '/login'">
+                <i class="fas fa-sign-in-alt"></i>
+                Login
+            </button>
+
+            <button class="nav-btn register-btn" 
+            onclick="window.location.href = '/registration'">
+                <i class="fas fa-user-plus"></i>
+                Register
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+
+
+
+<!-- HERO SECTION -->
+
+<section class="hero-section">
+
+    <div class="hero-glow glow1"></div>
+    <div class="hero-glow glow2"></div>
+
+    <!-- LEFT -->
+
+    <div class="hero-content">
+
+        <div class="hero-badge">
+            <i class="fas fa-bolt"></i>
+            AI Powered Smart Meetings
+        </div>
+
+        <h1>
+            Smart & Secure <br>
+            <span>Virtual Meetings</span>
+        </h1>
+
+        <p>
+            Conduct ultra secure meetings with AI summaries,
+            private participant communication, smart recordings,
+            screen sharing and admin controlled interactions.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button class="hero-btn primary-btn"
+               onclick="window.location.href = 'webSocket.html'"
+             >
+                <i class="fas fa-video"></i>
+                Start Meeting
+            </button>
+
+            <button class="hero-btn glass-btn" >
+                <i class="fas fa-play"></i>
+                Watch Demo
+            </button>
+        </div>  
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="hero-visual">
+
+        <!-- Floating -->
+
+        <div class="floating-widget widget1">
+            <i class="fas fa-shield-alt"></i>
+
+            <div>
+                <h4>Secure Rooms</h4>
+                <p>Protected Meetings</p>
+            </div>
+        </div>
+
+        <!-- MAIN CARD -->
+
+        <div class="meeting-card">
+
+            <div class="meeting-top">
+
+                <div class="live-badge">
+                    <span class="live-dot"></span>
+                    Live Meeting
+                </div>
+
+                <div class="meeting-id">
+                    VC-4589
+                </div>
+
+            </div>
+
+            <div class="video-layout">
+
+                <div class="main-video">
+
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop">
+
+                    <div class="video-label">
+                        Admin Presentation
+                    </div>
+
+                </div>
+
+                <div class="side-videos">
+
+                    <div class="side-video">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop">
+
+                        <div class="video-label">
+                            Participant
+                        </div>
+                    </div>
+
+                    <div class="side-video">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1200&auto=format&fit=crop">
+
+                        <div class="video-label">
+                            Participant
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="call-controls">
+
+                <button>
+                    <i class="fas fa-microphone"></i>
+                </button>
+
+                <button>
+                    <i class="fas fa-video"></i>
+                </button>
+
+                <button>
+                    <i class="fas fa-display"></i>
+                </button>
+
+                <button class="end-btn">
+                    <i class="fas fa-phone"></i>
+                </button>
+
+            </div>
+
+        </div>
+        <!-- Floating -->
+
+        <div class="floating-widget widget2">
+            <i class="fas fa-robot"></i>
+
+            <div>
+                <h4>AI Summary Ready</h4>
+                <p>Meeting converted into notes</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
+        <!-- HR LINE -->
+        <hr class="feature-divider">
+       <!-- FEATURES -->
+ <div class="feature-wrapper">
+
+    <!-- LEFT BUTTON -->
+
+    <button class="slider-btn prev-btn">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <!-- TRACK -->
+
+    <div class="feature-container">
+
+        <div class="feature-track">
+
+            <div class="feature-card">
+                <i class="fas fa-user-shield"></i>
+                <h3>Private Interaction</h3>
+                <p>
+                    Participants can interact only with admin.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-robot"></i>
+                <h3>AI Summary</h3>
+                <p>
+                    Smart AI generated meeting notes.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-display"></i>
+                <h3>Screen Sharing</h3>
+                <p>
+                    Smooth HD presentation sharing.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-link"></i>
+                <h3>File Sharing</h3>
+                <p>
+                    Share files and important links.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-lock"></i>
+                <h3>Secure Meetings</h3>
+                <p>
+                    End-to-end secure communication.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT BUTTON -->
+
+    <button class="slider-btn next-btn">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+</div>
+
+
+<!-- FOOTER Section-->
+
+<!-- FOOTER SECTION -->
+
+<footer class="footer">
+    <div class="footer-container">
+
+        <!-- Footer Top -->
+        <div class="footer-content">
+
+            <!-- Column 1: Logo & About -->
+            <div class="footer-column">
+                <div class="footer-logo">
+                    <i class="fas fa-video"></i>
+                    <span>VidConnect</span>
+                </div>
+                <p class="footer-desc">
+                    Secure and intelligent video meeting platform with AI-powered features for modern teams.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Column 2: Product -->
+            <div class="footer-column">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Updates</a></li>
+                    <li><a href="#">Roadmap</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Company -->
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Partners</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Support -->
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Docs</a></li>
+                    <li><a href="#">Status</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 5: Newsletter -->
+            <div class="footer-column">
+                <h4>Newsletter</h4>
+                <p class="newsletter-desc">Subscribe to get updates and exclusive offers</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" class="newsletter-input" required>
+                    <button type="submit" class="newsletter-btn">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Footer Divider -->
+        <div class="footer-divider"></div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p class="copyright">
+                &copy; 2026 VidConnect. All rights reserved.
+            </p>
+            <div class="footer-legal">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+
+    </div>
+</footer>
+   <script src="/socket.io/socket.io.js" defer></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="app.js" defer></script> 
+    
+
+
+</body>
+</html>

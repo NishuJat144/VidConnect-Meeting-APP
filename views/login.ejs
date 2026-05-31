@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidConnect - Login</title>
+    <link rel="stylesheet" href="/css/variables.css">
+    <link rel="stylesheet" href="/css/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="auth-container">
+
+        <!-- Left Side - Branding -->
+        <div class="auth-left">
+            <div class="auth-branding">
+                <div class="auth-logo">
+                    <i class="fas fa-video"></i>
+                    <span>VidConnect</span>
+                </div>
+                
+                <h1>Secure Video Meetings</h1>
+                <p>Connect with confidence. AI-powered, secure, and simple.</p>
+
+                <div class="auth-features">
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>End-to-End Encrypted</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-robot"></i>
+                        <span>AI-Powered</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-lock"></i>
+                        <span>Privacy First</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="auth-right">
+            
+            <!-- Tab Navigation -->
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="admin">
+                    <i class="fas fa-user-tie"></i>
+                    Admin Login
+                </button>
+                <button class="tab-btn" data-tab="participant">
+                    <i class="fas fa-user"></i>
+                    Participant Login
+                </button>
+            </div>
+
+            <!-- Admin Login Tab -->
+            <div class="tab-content active" id="admin-tab">
+                <div class="auth-card">
+                    <h2>Welcome Back, Admin</h2>
+                    <p class="auth-subtitle">Manage and control your meetings</p>
+
+                    <form class="auth-form" action="/api/login/admin" method="POST">
+                        
+                        <!-- Email Input -->
+                        <div class="form-group">
+                            <label for="admin-email">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input 
+                                    type="email" 
+                                    id="admin-email"
+                                    name="email"
+                                    placeholder="Enter your email"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="form-group">
+                            <label for="admin-password">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input 
+                                    type="password" 
+                                    id="admin-password"
+                                    name="password"
+                                    placeholder="Enter your password"
+                                    required
+                                >
+                                <button type="button" class="toggle-password" onclick="togglePassword('admin-password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="admin-remember" name="remember">
+                            <label for="admin-remember">Remember me</label>
+                        </div>
+
+                        <!-- Login Button -->
+                        <button type="submit" class="auth-btn primary-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login as Admin
+                        </button>
+
+                    </form>
+
+                    <!-- Divider -->
+                    <div class="auth-divider">
+                        <span>or</span>
+                    </div>
+
+                    <!-- Social Login -->
+                    <div class="social-login">
+                        <button class="social-btn google-btn">
+                            <i class="fab fa-google"></i>
+                            Google
+                        </button>
+                        <button class="social-btn microsoft-btn">
+                            <i class="fab fa-microsoft"></i>
+                            Microsoft
+                        </button>
+                    </div>
+
+                    <!-- Footer Links -->
+                    <div class="auth-footer">
+                        <a href="/forgot-password" class="link">Forgot Password?</a>
+                        <span class="separator">•</span>
+                        <a href="/register" class="link">Create Account</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Participant Login Tab -->
+            <div class="tab-content" id="participant-tab">
+                <div class="auth-card">
+                    <h2>Join a Meeting</h2>
+                    <p class="auth-subtitle">Quick login for participants</p>
+
+                    <form class="auth-form" action="/api/login/participant" method="POST">
+                        
+                        <!-- Email Input -->
+                        <div class="form-group">
+                            <label for="participant-email">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input 
+                                    type="email" 
+                                    id="participant-email"
+                                    name="email"
+                                    placeholder="Enter your email"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="form-group">
+                            <label for="participant-password">Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input 
+                                    type="password" 
+                                    id="participant-password"
+                                    name="password"
+                                    placeholder="Enter your password"
+                                    required
+                                >
+                                <button type="button" class="toggle-password" onclick="togglePassword('participant-password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="participant-remember" name="remember">
+                            <label for="participant-remember">Remember me</label>
+                        </div>
+
+                        <!-- Login Button -->
+                        <button type="submit" class="auth-btn primary-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login as Participant
+                        </button>
+
+                    </form>
+
+                    <!-- Divider -->
+                    <div class="auth-divider">
+                        <span>or</span>
+                    </div>
+
+                    <!-- Social Login -->
+                    <div class="social-login">
+                        <button class="social-btn google-btn">
+                            <i class="fab fa-google"></i>
+                            Google
+                        </button>
+                        <button class="social-btn microsoft-btn">
+                            <i class="fab fa-microsoft"></i>
+                            Microsoft
+                        </button>
+                    </div>
+
+                    <!-- Footer Links -->
+                    <div class="auth-footer">
+                        <a href="/forgot-password" class="link">Forgot Password?</a>
+                        <span class="separator">•</span>
+                        <a href="/register" class="link">Create Account</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Tab Switching
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.dataset.tab;
+                
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                button.classList.add('active');
+                document.getElementById(tabName + '-tab').classList.add('active');
+            });
+        });
+
+        // Toggle Password Visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const button = event.target.closest('.toggle-password');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                input.type = 'password';
+                button.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        }
+    </script>
+
+</body>
+</html>
