@@ -1,48 +1,93 @@
 # VidConnect 🎥
 
-VidConnect is a real-time video meeting platform built using **Node.js, Express.js, Socket.IO, WebRTC, MongoDB, HTML, CSS, and JavaScript**. It provides seamless video conferencing with a clean and distraction-free user experience.
+A modern real-time video conferencing platform built using **Node.js, Express.js, WebRTC, Socket.IO, MongoDB, HTML, CSS, and JavaScript**.
 
-## 🚀 Current Features
+VidConnect enables seamless video meetings with live communication, screen sharing, chat functionality, participant tracking, and media preview. The platform is designed around separate **Admin** and **Participant** workflows for better meeting management.
+
+---
+
+## ✨ Features
 
 ### 🏠 Homepage
 
-* Modern landing page
-* Create Meeting option
-* Join Meeting option
-* Responsive UI
+* Modern responsive landing page
+* Create Meeting
+* Join Meeting
+* Meeting code sharing
+* Professional UI/UX
 
-### 🎥 Real-Time Video Meetings
+### 🔐 Authentication UI (Ready)
 
-* Peer-to-peer video communication using WebRTC
-* Join meetings instantly using Meeting ID
-* Real-time connection establishment
+* Admin Login Interface
+* Participant Login Interface
+* Admin Registration Interface
+* Role-based tab switching
+* Authentication backend (JWT) planned
 
-### 🎙️ Audio & Video Controls
+### 🎥 Video Conferencing
 
-* Toggle microphone on/off
-* Toggle camera on/off
-* Live media state updates
+* Real-time video calling with WebRTC
+* Peer-to-peer communication
+* Low latency media streaming
 
-### 👀 Audio/Video Preview
+### 👀 Media Preview
 
-* Preview camera and microphone before joining a meeting
-* Better user experience and device verification
+* Camera preview before joining
+* Microphone status preview
+* Device verification
 
-### 💬 Real-Time Chat
+### 🎙️ Audio Controls
 
-* Instant messaging during meetings
-* Socket.IO powered communication
-* Low latency message delivery
+* Mute / Unmute microphone
+* Real-time media state updates
+
+### 📹 Video Controls
+
+* Camera On / Off
+* Live stream management
 
 ### 🖥️ Screen Sharing
 
-* Share your screen during meetings
-* Present documents, slides, and applications in real time
+* Share screen during meetings
+* Present slides and documents
 
-### 👥 Participant Tracking
+### 💬 Real-Time Chat
+
+* Socket.IO powered chat
+* Instant message delivery
+
+### 👥 Participant Management
 
 * Live participant count
-* Real-time join/leave updates
+* Join / Leave notifications
+* Real-time room updates
+
+---
+
+## 🏗️ Current Workflow
+
+```text
+Homepage
+│
+├── Create Meeting
+│
+├── Join Meeting
+│
+└── Login / Register
+      │
+      ├── Admin
+      └── Participant
+
+Meeting Room
+│
+├── Video Call
+├── Audio Controls
+├── Video Controls
+├── Screen Sharing
+├── Chat
+├── Participant Count
+└── Leave Meeting
+```
 
 ---
 
@@ -69,130 +114,105 @@ VidConnect is a real-time video meeting platform built using **Node.js, Express.
 * MongoDB
 * Mongoose
 
----
+### Development Tools
 
-## 📂 Project Structure
-
-```bash
-VidConnect/
-│
-├── public/
-│   ├── css/
-│   ├── js/
-│   ├── images/
-│
-├── views/
-│
-├── routes/
-│
-├── models/
-│
-├── controllers/
-│
-├── server.js
-├── package.json
-└── README.md
-```
-
-## ⚙️ Installation
-
-### Clone Repository
-
-```bash
-git clone https://github.com/your-username/VidConnect.git
-cd VidConnect
-```
-
-### Install Dependencies
-
-```bash
-npm install
-```
-
-### Start Server
-
-```bash
-npm start
-```
-
-or
-
-```bash
-node server.js
-```
-
-### Development Mode
-
-```bash
-npm run dev
-```
-
----
-
-## 🌟 Upcoming Features
-
-* JWT Authentication
-* Role-Based Authorization
-* Meeting History
-* Meeting Recording
-* File Sharing
-* AI Meeting Summary
-* Speech-to-Text Transcription
-* Real-Time Translation
-* Admin Dashboard
-* Participant Management
+* Git
+* GitHub
 
 ---
 
 ## 📸 Screenshots
 
-Add application screenshots here.
-
 ### Homepage
 
-![Homepage](screenshots/homepage.png)
+![Homepage](ui/home.png)
+
+### Homepage Features
+
+![Homepage Features](ui/home1.png)
+
+### Homepage Meeting Options
+
+![Homepage Meeting Options](ui/home2.png)
+
+### Admin Login
+
+![Admin Login](ui/adminLog.png)
+
+### Participant Login
+
+![Participant Login](ui/participantLog.png)
+
+### Admin Registration
+
+![Admin Registration](ui/regAdmin.png)
+
+### Media Preview
+
+![Media Preview](ui/prev.png)
+
+### Media Preview (Alternative)
+
+![Media Preview](ui/prev1.png)
 
 ### Meeting Room
 
-![Meeting Room](screenshots/meeting-room.png)
+![Meeting Room](ui/room.png)
+
+### Chat System
+
+![Chat System](ui/chat.png)
 
 ---
 
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome.
-
-1. Fork the repository
-2. Create your feature branch
+## ⚙️ Installation
 
 ```bash
-git checkout -b feature/new-feature
+git clone https://github.com/YOUR_USERNAME/VidConnect.git
+
+cd VidConnect
+
+npm install
+
+npm run dev
 ```
-
-3. Commit your changes
-
-```bash
-git commit -m "Add new feature"
-```
-
-4. Push to the branch
-
-```bash
-git push origin feature/new-feature
-```
-
-5. Open a Pull Request
 
 ---
 
-## 📜 License
+## 🚀 Upcoming Features
 
-This project is licensed under the MIT License.
+### Authentication & Authorization
+
+* JWT Authentication
+* Role-Based Authorization
+* Protected Routes
+* Session Management
+
+### AI Features
+
+* Speech-to-Text
+* Meeting Summaries
+* Real-Time Translation
+* Text-to-Speech
+
+### Advanced Features
+
+* Meeting Recording
+* File Sharing
+* Meeting History
+* Admin Dashboard
+* Participant Dashboard
+
+---
+
+## 🎯 Project Goal
+
+VidConnect aims to provide a lightweight, scalable, and feature-rich video conferencing platform powered by WebRTC and Socket.IO, with future AI-powered collaboration features.
 
 ---
 
 ## 👨‍💻 Developer
 
-Developed by **Yogesh Singh**
+**Yogesh Singh**
 
-If you like this project, don't forget to ⭐ the repository.
+If you found this project useful, consider giving it a ⭐ on GitHub.
